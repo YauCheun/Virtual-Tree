@@ -1,6 +1,6 @@
 import { App } from "vue";
-
-const components: any[] = [];
+import tree from "./components/tree";
+const components = [tree];
 
 export default function (app: App) {
   components.forEach((item) => app.component(item.name, item));

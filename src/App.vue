@@ -1,21 +1,17 @@
 <template>
   <div class="contianer">
-    <demo-from />
-    <demo-tabs />
+    <tree-demo></tree-demo>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-// import demoInput from "./components/Input/demo.vue";
-import demoFrom from "./components/From/demo.vue";
-import demoTabs from "./components/Tabs/demo.vue";
+import treeDemo from "./components/tree/demo.vue";
 export default defineComponent({
   name: "App",
   components: {
     // demoInput,
-    demoFrom,
-    demoTabs,
+    treeDemo,
   },
 });
 </script>
