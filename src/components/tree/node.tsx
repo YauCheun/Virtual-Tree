@@ -9,18 +9,36 @@ export default defineComponent({
       type: Object as PropType<RequiredTreeNodeOptions>,
       required: true,
     },
+    onToggleExpand: {
+      type: Function as PropType<(arg: RequiredTreeNodeOptions) => void>,
+    },
   },
+  emits: ["toggle-expand"],
   setup(props, ctx) {
-    const node = toRefs(props.node);
-    console.log(node.name);
+    // eslint-disable-next-line vue/no-setup-props-destructure
+    const { node } = props;
+    const handleExpand = () => {
+      ctx.emit("toggle-expand", node);
+    };
+    const RenderArrow = (): JSX.Element => {
+      return (
+        <div
+          class={["node-arrow", node.expanded ? "expanded" : ""]}
+          onClick={handleExpand}
+        >
+          {node.hasChildren ? <i class="iconfont iconExpand"></i> : null}
+        </div>
+      );
+    };
     return () => {
       return (
-        <div class="ant-tree-node">
-          <div class="node-arrow">
-            {node.hasChildren.value ? <i class="iconfont iconExpand"></i> : null}
-          </div>
+        <div
+          class="ant-tree-node"
+          style={{ paddingLeft: node.level * 18 + "px" }}
+        >
+          {RenderArrow()}
           <div class="node-content node-text">
-            <div class="node-title">{node.name.value}</div>
+            <div class="node-title">{node.name}</div>
           </div>
         </div>
       );
