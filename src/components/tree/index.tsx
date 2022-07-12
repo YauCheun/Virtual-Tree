@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { defineComponent, PropType, ref, watch } from "vue";
 import { RequiredTreeNodeOptions, TreeNodeOptions } from "./types";
+import "./index.scss";
+import ATreeNode from "./node";
 const flattenTree = (source: TreeNodeOptions[]): RequiredTreeNodeOptions[] => {
   const result: RequiredTreeNodeOptions[] = [];
   const recursion = (
@@ -21,7 +23,7 @@ const flattenTree = (source: TreeNodeOptions[]): RequiredTreeNodeOptions[] => {
         children: item.children || [],
         parentKey: parent?.nodeKey || null,
       };
-      result.push(node)
+      result.push(node);
       if (item.expanded && node.children.length) {
         node.children = recursion(node.children, level + 1, node);
       }
@@ -47,7 +49,7 @@ export default defineComponent({
       () => props.source,
       (newVal) => {
         flatList.value = flattenTree(newVal);
-        console.log(flatList.value,newVal);
+        console.log(flatList.value, newVal);
       },
       { immediate: true }
     );
@@ -55,12 +57,9 @@ export default defineComponent({
       return (
         <div class="ant-tree-wrap">
           <div class="ant-tree">
-            <div class="ant-tree-node">
-              <div class="tree-content">aaaa</div>
-            </div>
-            <div class="ant-tree-node">
-              <div class="tree-content">aaaa</div>
-            </div>
+            {flatList.value.map((node, index) => {
+              return <ATreeNode key={node.nodeKey} node={node} />;
+            })}
           </div>
         </div>
       );

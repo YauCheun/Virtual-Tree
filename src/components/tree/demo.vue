@@ -17,7 +17,8 @@ function recursion(path = "0", level = 3, h = 3): TreeNodeOptions[] {
       nodeKey,
       name: nodeKey,
       children: [],
-      expanded: true,
+      hasChildren: true,
+      // expanded: true,
     };
     if (level > 0) {
       treeNode.children = recursion(nodeKey, level - 1);
