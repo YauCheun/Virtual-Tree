@@ -45,11 +45,15 @@ export default defineComponent({
       type: Array as PropType<TreeNodeOptions[]>,
       default: () => [],
     },
+    lazyLoad: {
+      type: Function as PropType<(node: RequiredTreeNodeOptions,callback:(children:TreeNodeOptions[]) => void)=>void>
+    }
   },
   setup(props, ctx) {
     const flatList = ref<RequiredTreeNodeOptions[]>([]);
-    const ExpandNode = (node: RequiredTreeNodeOptions) => {
-      const trueChildren = cloneDeep(node.children);
+    const loading = ref(false)
+    const ExpandNode = (node: RequiredTreeNodeOptions, children: TreeNodeOptions[] = []) => {
+      const trueChildren = children.length ? children : cloneDeep(node.children);
       node.children = trueChildren.map((item) => {
         return {
           ...item,
@@ -98,6 +102,7 @@ export default defineComponent({
       recursion(node);
     };
     const handleToggleExpand = (node: RequiredTreeNodeOptions) => {
+      if(loading.value) return 
       node.expanded = !node.expanded;
       if (node.expanded) {
         // 展开
@@ -106,6 +111,17 @@ export default defineComponent({
           ExpandNode(node);
         } else {
           // 懒加载
+          if(props.lazyLoad && node.hasChildren){
+            loading.value = true
+            node.loading = true
+            props.lazyLoad(node, children => {
+              ExpandNode(node, children)
+              loading.value = false
+              node.loading = false
+            })
+          }else {
+            node.expanded = !node.expanded;
+          }
         }
       } else {
         // 收起

@@ -7,7 +7,7 @@
 
 <script lang="tsx">
 import { defineComponent, onMounted, ref } from "vue";
-import { TreeNodeOptions } from "./types";
+import { TreeNodeOptions } from "../types";
 function recursion(path = "0"): TreeNodeOptions[] {
   const list = [];
   for (let i = 0; i < 2; i += 1) {
@@ -42,7 +42,6 @@ export default defineComponent({
           name: nodeKey,
           children: [],
           hasChildren: true,
-          disabled: Boolean(i % 2),
         };
         result.push(treeNode);
       }
