@@ -2,6 +2,7 @@
 import { computed, defineComponent, PropType } from "vue";
 import { RequiredTreeNodeOptions } from "./types";
 
+type CustomEventType<T> = (arg: T) => void;
 export default defineComponent({
   name: "ATreeNode",
   props: {
@@ -10,10 +11,13 @@ export default defineComponent({
       required: true,
     },
     onToggleExpand: {
-      type: Function as PropType<(arg: RequiredTreeNodeOptions) => void>,
+      type: Function as PropType<CustomEventType<RequiredTreeNodeOptions>>,
+    },
+    onSelectChange: {
+      type: Function as PropType<CustomEventType<RequiredTreeNodeOptions>>,
     },
   },
-  emits: ["toggle-expand"],
+  emits: ["toggle-expand", "select-change"],
   setup(props, ctx) {
     // eslint-disable-next-line vue/no-setup-props-destructure
     const { node } = props;
@@ -22,10 +26,19 @@ export default defineComponent({
       if (node.disabled) {
         result += " disabled";
       }
+      if (node.selected) {
+        result += " selected";
+      }
       return result;
     });
     const handleExpand = () => {
       ctx.emit("toggle-expand", node);
+    };
+    const handleSelect = (e: Event) => {
+      e.stopPropagation();
+      if (!node.disabled) {
+        ctx.emit("select-change", node);
+      }
     };
     const RenderArrow = (): JSX.Element => {
       return (
@@ -48,7 +61,7 @@ export default defineComponent({
           onClick={handleExpand}
         >
           {RenderArrow()}
-          <div class="node-content node-text">
+          <div class="node-content node-text" onClick={handleSelect}>
             <div class={textCls.value}>{node.name}</div>
           </div>
         </div>

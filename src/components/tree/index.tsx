@@ -5,38 +5,7 @@ import { cloneDeep } from "lodash";
 import { nodeKey, RequiredTreeNodeOptions, TreeNodeOptions } from "./types";
 import "./index.scss";
 import ATreeNode from "./node";
-const flattenTree = (source: TreeNodeOptions[]): RequiredTreeNodeOptions[] => {
-  const result: RequiredTreeNodeOptions[] = [];
-  const recursion = (
-    list: TreeNodeOptions[],
-    level = 0,
-    parent: RequiredTreeNodeOptions | null = null
-  ): RequiredTreeNodeOptions[] => {
-    return list.map((item) => {
-      const node: RequiredTreeNodeOptions = {
-        ...item,
-        level,
-        loading: false,
-        disabled: item.disabled || false,
-        expanded: item.expanded || false,
-        selected: item.selected || false,
-        checked: item.checked || false,
-        hasChildren: item.hasChildren || false,
-        children: item.children || [],
-        parentKey: parent?.nodeKey || null,
-      };
-      result.push(node);
-      if (item.expanded && node.children.length) {
-        node.children = recursion(node.children, level + 1, node);
-      }
-      return node;
-    });
-  };
-  if (source.length) {
-    recursion(source);
-  }
-  return result;
-};
+
 
 export default defineComponent({
   name: "ATree",
@@ -52,6 +21,7 @@ export default defineComponent({
   setup(props, ctx) {
     const flatList = ref<RequiredTreeNodeOptions[]>([]);
     const loading = ref(false)
+    const selectedKey = ref<nodeKey>('')
     const ExpandNode = (node: RequiredTreeNodeOptions, children: TreeNodeOptions[] = []) => {
       const trueChildren = children.length ? children : cloneDeep(node.children);
       node.children = trueChildren.map((item) => {
@@ -101,6 +71,41 @@ export default defineComponent({
       node.expanded
       recursion(node);
     };
+    const flattenTree = (source: TreeNodeOptions[]): RequiredTreeNodeOptions[] => {
+      const result: RequiredTreeNodeOptions[] = [];
+      const recursion = (
+        list: TreeNodeOptions[],
+        level = 0,
+        parent: RequiredTreeNodeOptions | null = null
+      ): RequiredTreeNodeOptions[] => {
+        return list.map((item) => {
+          const node: RequiredTreeNodeOptions = {
+            ...item,
+            level,
+            loading: false,
+            disabled: item.disabled || false,
+            expanded: item.expanded || false,
+            selected: item.selected || false,
+            checked: item.checked || false,
+            hasChildren: item.hasChildren || false,
+            children: item.children || [],
+            parentKey: parent?.nodeKey || null,
+          };
+          result.push(node);
+          if(node.selected){
+            selectedKey.value = node.nodeKey
+          }
+          if (item.expanded && node.children.length) {
+            node.children = recursion(node.children, level + 1, node);
+          }
+          return node;
+        });
+      };
+      if (source.length) {
+        recursion(source);
+      }
+      return result;
+    };
     const handleToggleExpand = (node: RequiredTreeNodeOptions) => {
       if(loading.value) return 
       node.expanded = !node.expanded;
@@ -128,6 +133,19 @@ export default defineComponent({
         collapseNode(node);
       }
     };
+    const handleSelectChange = (node: RequiredTreeNodeOptions)=>{
+      let newSelectKey:nodeKey = ''
+      if(selectedKey.value !== node.nodeKey){
+        const oldSelectedIndex = flatList.value.findIndex(i=>i.nodeKey === selectedKey.value)
+        if(oldSelectedIndex > -1){
+          flatList.value[oldSelectedIndex].selected = false
+        }
+        node.selected = true
+        newSelectKey = node.nodeKey
+      }
+      selectedKey.value =newSelectKey
+
+    }
     watch(
       () => props.source,
       (newVal) => {
@@ -146,6 +164,7 @@ export default defineComponent({
                   key={node.nodeKey}
                   node={node}
                   onToggleExpand={handleToggleExpand}
+                  onSelectChange={handleSelectChange}
                 />
               );
             })}
