@@ -2,10 +2,9 @@
 import { defineComponent, PropType, ref, watch } from "vue";
 import { cloneDeep } from "lodash";
 
-import { nodeKey, RequiredTreeNodeOptions, TreeNodeOptions } from "./types";
+import { nodeKey, RenderFunc, RequiredTreeNodeOptions, TreeNodeOptions } from "./types";
 import "./index.scss";
 import ATreeNode from "./node";
-
 
 export default defineComponent({
   name: "ATree",
@@ -15,15 +14,28 @@ export default defineComponent({
       default: () => [],
     },
     lazyLoad: {
-      type: Function as PropType<(node: RequiredTreeNodeOptions,callback:(children:TreeNodeOptions[]) => void)=>void>
-    }
+      type: Function as PropType<
+        (
+          node: RequiredTreeNodeOptions,
+          callback: (children: TreeNodeOptions[]) => void
+        ) => void
+      >,
+    },
+    render: {
+      type: Function as PropType<RenderFunc>,
+    },
   },
   setup(props, ctx) {
     const flatList = ref<RequiredTreeNodeOptions[]>([]);
-    const loading = ref(false)
-    const selectedKey = ref<nodeKey>('')
-    const ExpandNode = (node: RequiredTreeNodeOptions, children: TreeNodeOptions[] = []) => {
-      const trueChildren = children.length ? children : cloneDeep(node.children);
+    const loading = ref(false);
+    const selectedKey = ref<nodeKey>("");
+    const ExpandNode = (
+      node: RequiredTreeNodeOptions,
+      children: TreeNodeOptions[] = []
+    ) => {
+      const trueChildren = children.length
+        ? children
+        : cloneDeep(node.children);
       node.children = trueChildren.map((item) => {
         return {
           ...item,
@@ -68,10 +80,12 @@ export default defineComponent({
           );
         }
       };
-      node.expanded
+      node.expanded;
       recursion(node);
     };
-    const flattenTree = (source: TreeNodeOptions[]): RequiredTreeNodeOptions[] => {
+    const flattenTree = (
+      source: TreeNodeOptions[]
+    ): RequiredTreeNodeOptions[] => {
       const result: RequiredTreeNodeOptions[] = [];
       const recursion = (
         list: TreeNodeOptions[],
@@ -92,8 +106,8 @@ export default defineComponent({
             parentKey: parent?.nodeKey || null,
           };
           result.push(node);
-          if(node.selected){
-            selectedKey.value = node.nodeKey
+          if (node.selected) {
+            selectedKey.value = node.nodeKey;
           }
           if (item.expanded && node.children.length) {
             node.children = recursion(node.children, level + 1, node);
@@ -107,7 +121,7 @@ export default defineComponent({
       return result;
     };
     const handleToggleExpand = (node: RequiredTreeNodeOptions) => {
-      if(loading.value) return 
+      if (loading.value) return;
       node.expanded = !node.expanded;
       if (node.expanded) {
         // 展开
@@ -116,15 +130,15 @@ export default defineComponent({
           ExpandNode(node);
         } else {
           // 懒加载
-          if(props.lazyLoad && node.hasChildren){
-            loading.value = true
-            node.loading = true
-            props.lazyLoad(node, children => {
-              ExpandNode(node, children)
-              loading.value = false
-              node.loading = false
-            })
-          }else {
+          if (props.lazyLoad && node.hasChildren) {
+            loading.value = true;
+            node.loading = true;
+            props.lazyLoad(node, (children) => {
+              ExpandNode(node, children);
+              loading.value = false;
+              node.loading = false;
+            });
+          } else {
             node.expanded = !node.expanded;
           }
         }
@@ -133,19 +147,20 @@ export default defineComponent({
         collapseNode(node);
       }
     };
-    const handleSelectChange = (node: RequiredTreeNodeOptions)=>{
-      let newSelectKey:nodeKey = ''
-      if(selectedKey.value !== node.nodeKey){
-        const oldSelectedIndex = flatList.value.findIndex(i=>i.nodeKey === selectedKey.value)
-        if(oldSelectedIndex > -1){
-          flatList.value[oldSelectedIndex].selected = false
+    const handleSelectChange = (node: RequiredTreeNodeOptions) => {
+      let newSelectKey: nodeKey = "";
+      if (selectedKey.value !== node.nodeKey) {
+        const oldSelectedIndex = flatList.value.findIndex(
+          (i) => i.nodeKey === selectedKey.value
+        );
+        if (oldSelectedIndex > -1) {
+          flatList.value[oldSelectedIndex].selected = false;
         }
-        node.selected = true
-        newSelectKey = node.nodeKey
+        node.selected = true;
+        newSelectKey = node.nodeKey;
       }
-      selectedKey.value =newSelectKey
-
-    }
+      selectedKey.value = newSelectKey;
+    };
     watch(
       () => props.source,
       (newVal) => {
@@ -154,6 +169,7 @@ export default defineComponent({
       },
       { immediate: true }
     );
+    console.log(ctx.slots)
     return () => {
       return (
         <div class="ant-tree-wrap">
@@ -163,6 +179,8 @@ export default defineComponent({
                 <ATreeNode
                   key={node.nodeKey}
                   node={node}
+                  iconSlot={ctx.slots.icon}
+                  render={props.render}
                   onToggleExpand={handleToggleExpand}
                   onSelectChange={handleSelectChange}
                 />

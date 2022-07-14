@@ -1,13 +1,18 @@
 <template>
   <div class="demo-box">
     <h3>tree demo</h3>
-    <a-tree :source="list" :lazyLoad="lazyLoad" />
+    <a-tree :source="list" :lazyLoad="lazyLoad" :render="renderNode">
+      <template #icon="loading">
+        <i v-if="loading" class="iconfont iconcustom-icon ico-loading"></i>
+        <i v-else class="iconfont iconzhankai"></i>
+      </template>
+    </a-tree>
   </div>
 </template>
 
 <script lang="tsx">
 import { defineComponent, onMounted, ref } from "vue";
-import { TreeNodeOptions } from "./types";
+import { RequiredTreeNodeOptions, TreeNodeOptions } from "./types";
 function recursion(path = "0"): TreeNodeOptions[] {
   const list = [];
   for (let i = 0; i < 2; i += 1) {
@@ -50,9 +55,17 @@ export default defineComponent({
         callback(result);
       }, 1000);
     };
+    const renderNode = (node: TreeNodeOptions) => {
+      return (
+        <div style="padding: 0 4px;">
+          <b style="color: red;">{node.name}</b>
+        </div>
+      );
+    };
     return {
       list,
       lazyLoad,
+      renderNode,
     };
   },
 });

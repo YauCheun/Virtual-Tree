@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { computed, defineComponent, PropType } from "vue";
-import { RequiredTreeNodeOptions } from "./types";
-
+import { computed, defineComponent, PropType, Slot } from "vue";
+import { RenderFunc, RequiredTreeNodeOptions } from "./types";
+import RenderNode from "./render";
 type CustomEventType<T> = (arg: T) => void;
 export default defineComponent({
   name: "ATreeNode",
@@ -16,11 +16,17 @@ export default defineComponent({
     onSelectChange: {
       type: Function as PropType<CustomEventType<RequiredTreeNodeOptions>>,
     },
+    render: {
+      type: Function as PropType<RenderFunc>,
+    },
+    iconSlot: {
+      type: Function as PropType<Slot>,
+    },
   },
   emits: ["toggle-expand", "select-change"],
   setup(props, ctx) {
     // eslint-disable-next-line vue/no-setup-props-destructure
-    const { node } = props;
+    const { node, render, iconSlot } = props;
     const textCls = computed(() => {
       let result = "node-title";
       if (node.disabled) {
@@ -44,12 +50,25 @@ export default defineComponent({
       return (
         <div class={["node-arrow", node.expanded ? "expanded" : ""]}>
           {node.hasChildren ? (
-            node.loading ? (
+            iconSlot ? (
+              iconSlot(node.loading)
+            ) : node.loading ? (
               <i class="iconfont iconloading ico-loading"></i>
             ) : (
               <i class="iconfont iconExpand"></i>
             )
           ) : null}
+        </div>
+      );
+    };
+    const RenderContent = (): JSX.Element => {
+      return (
+        <div class="node-content node-text" onClick={handleSelect}>
+          {render ? (
+            <RenderNode render={render} node={node} />
+          ) : (
+            <div class={textCls.value}>{node.name}</div>
+          )}
         </div>
       );
     };
@@ -61,9 +80,7 @@ export default defineComponent({
           onClick={handleExpand}
         >
           {RenderArrow()}
-          <div class="node-content node-text" onClick={handleSelect}>
-            <div class={textCls.value}>{node.name}</div>
-          </div>
+          {RenderContent()}
         </div>
       );
     };
