@@ -2,9 +2,15 @@
 import { defineComponent, PropType, ref, watch } from "vue";
 import { cloneDeep } from "lodash";
 
-import { nodeKey, RenderFunc, RequiredTreeNodeOptions, TreeNodeOptions } from "./types";
+import {
+  nodeKey,
+  RenderFunc,
+  RequiredTreeNodeOptions,
+  TreeNodeOptions,
+} from "./types";
 import "./index.scss";
 import ATreeNode from "./node";
+import { updateDownwards, updateUpwards } from "./utils";
 
 export default defineComponent({
   name: "ATree",
@@ -24,7 +30,16 @@ export default defineComponent({
     render: {
       type: Function as PropType<RenderFunc>,
     },
+    showCheckbox: {
+      type: Boolean,
+      default: false,
+    },
+    checkStrictly: {
+      type: Boolean,
+      default: false,
+    },
   },
+  emits: ["selcet-change", "check-change"],
   setup(props, ctx) {
     const flatList = ref<RequiredTreeNodeOptions[]>([]);
     const loading = ref(false);
@@ -45,7 +60,7 @@ export default defineComponent({
           expanded: item.expanded || false,
           selected: item.selected || false,
           // ?? 可选链
-          checked: item.checked ?? node.checked,
+          checked: props.checkStrictly ? false : item.checked ?? node.checked,
           hasChildren: item.hasChildren || false,
           children: item.children || [],
           parentKey: node.nodeKey || null,
@@ -160,6 +175,19 @@ export default defineComponent({
         newSelectKey = node.nodeKey;
       }
       selectedKey.value = newSelectKey;
+      ctx.emit("selcet-change", node);
+    };
+    const handleCheckChange = ([check, node]: [
+      boolean,
+      RequiredTreeNodeOptions
+    ]) => {
+      node.checked = check;
+      // checkStrictly true父子不联动 false 父子联动
+      if (!props.checkStrictly) {
+        updateDownwards(node, check);
+        updateUpwards(node, flatList.value);
+      }
+      ctx.emit("check-change", [check, node]);
     };
     watch(
       () => props.source,
@@ -169,7 +197,7 @@ export default defineComponent({
       },
       { immediate: true }
     );
-    console.log(ctx.slots)
+    console.log(ctx.slots);
     return () => {
       return (
         <div class="ant-tree-wrap">
@@ -180,9 +208,12 @@ export default defineComponent({
                   key={node.nodeKey}
                   node={node}
                   iconSlot={ctx.slots.icon}
+                  showCheckbox={props.showCheckbox}
                   render={props.render}
+                  checkStrictly={props.checkStrictly}
                   onToggleExpand={handleToggleExpand}
                   onSelectChange={handleSelectChange}
+                  onCheckChange={handleCheckChange}
                 />
               );
             })}

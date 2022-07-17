@@ -1,3 +1,5 @@
+import { PropType } from "vue";
+
 type nodeKey = string | number; // 唯一索引
 
 /*
@@ -21,5 +23,11 @@ interface TreeNodeOptions {
 // 组件内部使用
 type RequiredTreeNodeOptions = Required<TreeNodeOptions>;
 type RenderFunc = (node: TreeNodeOptions) => JSX.Element;
-
-export { nodeKey, TreeNodeOptions, RequiredTreeNodeOptions, RenderFunc };
+type CustomEventFuncType<T> = PropType<(arg: T) => void>;
+export {
+  nodeKey,
+  TreeNodeOptions,
+  RequiredTreeNodeOptions,
+  RenderFunc,
+  CustomEventFuncType,
+};

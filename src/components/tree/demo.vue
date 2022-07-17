@@ -1,7 +1,12 @@
 <template>
   <div class="demo-box">
     <h3>tree demo</h3>
-    <a-tree :source="list" :lazyLoad="lazyLoad" :render="renderNode">
+    <a-tree
+      :source="list"
+      :lazyLoad="lazyLoad"
+      :render="renderNode"
+      show-checkbox
+    >
       <template #icon="loading">
         <i v-if="loading" class="iconfont iconcustom-icon ico-loading"></i>
         <i v-else class="iconfont iconzhankai"></i>
@@ -47,7 +52,7 @@ export default defineComponent({
           name: nodeKey,
           children: [],
           hasChildren: true,
-          disabled: Boolean(i % 2),
+          // disabled: Boolean(i % 2),
         };
         result.push(treeNode);
       }

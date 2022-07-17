@@ -1,8 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { computed, defineComponent, PropType, Slot } from "vue";
-import { RenderFunc, RequiredTreeNodeOptions } from "./types";
+import {
+  CustomEventFuncType,
+  RenderFunc,
+  RequiredTreeNodeOptions,
+} from "./types";
 import RenderNode from "./render";
-type CustomEventType<T> = (arg: T) => void;
+import ACheckBox from "../Checkbox/index";
 export default defineComponent({
   name: "ATreeNode",
   props: {
@@ -11,10 +15,13 @@ export default defineComponent({
       required: true,
     },
     onToggleExpand: {
-      type: Function as PropType<CustomEventType<RequiredTreeNodeOptions>>,
+      type: Function as CustomEventFuncType<RequiredTreeNodeOptions>,
     },
     onSelectChange: {
-      type: Function as PropType<CustomEventType<RequiredTreeNodeOptions>>,
+      type: Function as CustomEventFuncType<RequiredTreeNodeOptions>,
+    },
+    onCheckChange: {
+      type: Function as CustomEventFuncType<[boolean, RequiredTreeNodeOptions]>,
     },
     render: {
       type: Function as PropType<RenderFunc>,
@@ -22,11 +29,19 @@ export default defineComponent({
     iconSlot: {
       type: Function as PropType<Slot>,
     },
+    showCheckbox: {
+      type: Boolean,
+      default: false,
+    },
+    checkStrictly: {
+      type: Boolean,
+      default: false,
+    },
   },
-  emits: ["toggle-expand", "select-change"],
+  emits: ["toggle-expand", "select-change", "check-change"],
   setup(props, ctx) {
     // eslint-disable-next-line vue/no-setup-props-destructure
-    const { node, render, iconSlot } = props;
+    const { node, render, iconSlot, checkStrictly } = props;
     const textCls = computed(() => {
       let result = "node-title";
       if (node.disabled) {
@@ -37,6 +52,15 @@ export default defineComponent({
       }
       return result;
     });
+    const halfChecked = computed(() => {
+      let result = false;
+      if (!checkStrictly && node.hasChildren) {
+        const childChecked = node.children.filter((i) => i.checked);
+        result = childChecked.length > 0 && childChecked.length < node.children.length;
+      }
+
+      return result;
+    });
     const handleExpand = () => {
       ctx.emit("toggle-expand", node);
     };
@@ -45,6 +69,9 @@ export default defineComponent({
       if (!node.disabled) {
         ctx.emit("select-change", node);
       }
+    };
+    const handleCheckChange = (checked: boolean) => {
+      ctx.emit("check-change", [checked, node]);
     };
     const RenderArrow = (): JSX.Element => {
       return (
@@ -61,14 +88,30 @@ export default defineComponent({
         </div>
       );
     };
+    const normalContent = (): JSX.Element => {
+      return render ? (
+        <RenderNode render={render} node={node} />
+      ) : (
+        <div class={textCls.value}>{node.name}</div>
+      );
+    };
     const RenderContent = (): JSX.Element => {
+      if (props.showCheckbox) {
+        return (
+          <ACheckBox
+            class="node-content node-text"
+            modelValue={node.checked}
+            disabled={node.disabled}
+            halfChecked={halfChecked.value}
+            onChange={handleCheckChange}
+          >
+            {normalContent()}
+          </ACheckBox>
+        );
+      }
       return (
         <div class="node-content node-text" onClick={handleSelect}>
-          {render ? (
-            <RenderNode render={render} node={node} />
-          ) : (
-            <div class={textCls.value}>{node.name}</div>
-          )}
+          {normalContent()}
         </div>
       );
     };
