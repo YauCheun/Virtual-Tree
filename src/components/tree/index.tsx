@@ -189,6 +189,14 @@ export default defineComponent({
       }
       ctx.emit("check-change", [check, node]);
     };
+    ctx.expose({
+      getSelectedNode: (): RequiredTreeNodeOptions | undefined => {
+        return flatList.value.find((i) => i.selected);
+      },
+      getCheckedNodes: (): RequiredTreeNodeOptions[] => {
+        return flatList.value.filter((i) => i.checked);
+      },
+    });
     watch(
       () => props.source,
       (newVal) => {

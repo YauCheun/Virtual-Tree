@@ -20,6 +20,11 @@ interface TreeNodeOptions {
   parentKey?: nodeKey | null;
 }
 
+interface TreeInstance {
+  getSelectedNode: () => RequiredTreeNodeOptions | undefined;
+  getCheckedNodes: () => RequiredTreeNodeOptions[];
+}
+
 // 组件内部使用
 type RequiredTreeNodeOptions = Required<TreeNodeOptions>;
 type RenderFunc = (node: TreeNodeOptions) => JSX.Element;
@@ -30,4 +35,5 @@ export {
   RequiredTreeNodeOptions,
   RenderFunc,
   CustomEventFuncType,
+  TreeInstance,
 };

@@ -2,6 +2,7 @@
   <div class="demo-box">
     <h3>tree demo</h3>
     <a-tree
+      ref="aTree"
       :source="list"
       :lazyLoad="lazyLoad"
       :render="renderNode"
@@ -17,7 +18,11 @@
 
 <script lang="tsx">
 import { defineComponent, onMounted, ref } from "vue";
-import { RequiredTreeNodeOptions, TreeNodeOptions } from "./types";
+import {
+  RequiredTreeNodeOptions,
+  TreeInstance,
+  TreeNodeOptions,
+} from "./types";
 function recursion(path = "0"): TreeNodeOptions[] {
   const list = [];
   for (let i = 0; i < 2; i += 1) {
@@ -37,8 +42,10 @@ export default defineComponent({
   setup(props) {
     // https://lychub.github.io/vue-virtual-tree
     const list = ref<TreeNodeOptions[]>([]);
+    const aTree = ref<TreeInstance>();
     onMounted(() => {
       list.value = recursion();
+      console.log(aTree.value?.getCheckedNodes());
     });
     const lazyLoad = (
       node: TreeNodeOptions,
@@ -67,10 +74,12 @@ export default defineComponent({
         </div>
       );
     };
+
     return {
       list,
       lazyLoad,
       renderNode,
+      aTree,
     };
   },
 });

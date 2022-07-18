@@ -47,7 +47,7 @@ export default defineComponent({
       if (node.disabled) {
         result += " disabled";
       }
-      if (node.selected) {
+      if (node.selected && !props.showCheckbox) {
         result += " selected";
       }
       return result;
