@@ -5,7 +5,7 @@
     <button @click="reset">reset items</button> |
     <button @click="clear">clear items</button>
     <div class="form-item">
-      <virtual-list v-slot="{ item }" :size="42" :remain="8" :list="list">
+      <virtual-list v-slot="{ item }" :size="41" :remain="8" :list="list">
         <div class="item">{{ item }}</div>
       </virtual-list>
     </div>
