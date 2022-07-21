@@ -11,10 +11,6 @@ interface TreeNodeOptions {
   name: string;
   level?: number; // 控制缩进
   loading?: boolean;
-  disabled?: boolean;
-  expanded?: boolean;
-  selected?: boolean;
-  checked?: boolean;
   hasChildren?: boolean;
   children?: TreeNodeOptions[];
   parentKey?: nodeKey | null;
@@ -24,6 +20,9 @@ interface TreeInstance {
   getSelectedNode: () => RequiredTreeNodeOptions | undefined;
   getCheckedNodes: () => RequiredTreeNodeOptions[];
 }
+
+type TypeWithNull<T> = T | null;
+type TypeWithUndefined<T> = T | undefined;
 
 // 组件内部使用
 type RequiredTreeNodeOptions = Required<TreeNodeOptions>;
@@ -36,4 +35,6 @@ export {
   RenderFunc,
   CustomEventFuncType,
   TreeInstance,
+  TypeWithNull,
+  TypeWithUndefined,
 };
