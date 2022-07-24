@@ -5,20 +5,20 @@
     <button @click="reset">reset items</button> |
     <button @click="clear">clear items</button>
     <div class="form-item">
-      <virtual-list v-slot="{ item }" :size="41" :remain="8" :list="list">
+      <vir-list v-slot="{ item }" :size="41" :remain="8" :list="list">
         <div class="item">{{ item }}</div>
-      </virtual-list>
+      </vir-list>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
-import VirtualList from "./index";
+import VirList from "./index";
 
 export default defineComponent({
   name: "FieldDemo",
-  components: { VirtualList },
+  components: { VirList },
   setup(props, context) {
     const list = ref<string[]>([]);
     const addList = (count: number) => {

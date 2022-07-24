@@ -38,6 +38,12 @@ export class SelectionModel<T> {
     return this._selections.size === 0;
   }
   /**
+   * 清除选择数据
+   */
+  clear(): void {
+    this._unMarkAll();
+  }
+  /**
    * 切换选择和取消选择之间的值。
    */
   toggle(value: T): void {

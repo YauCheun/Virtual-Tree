@@ -21,6 +21,11 @@ interface TreeInstance {
   getCheckedNodes: () => RequiredTreeNodeOptions[];
 }
 
+interface TreeNodeInstance {
+  rawNode: TreeNodeOptions;
+  halfChecked: () => boolean;
+}
+
 type TypeWithNull<T> = T | null;
 type TypeWithUndefined<T> = T | undefined;
 
@@ -37,4 +42,5 @@ export {
   TreeInstance,
   TypeWithNull,
   TypeWithUndefined,
+  TreeNodeInstance,
 };

@@ -1,12 +1,12 @@
 @import "./iconfont.css";
 
-.#{$ant-pre}tree-wrap {
+.#{$vir-pre}tree-wrap {
   position: relative;
   display: inline-block;
   width: 100%;
   user-select: none;
-  .#{$ant-pre}tree {
-    .#{$ant-pre}tree-node {
+  .#{$vir-pre}tree {
+    .#{$vir-pre}tree-node {
       padding: 4px 0;
       line-height: normal;
       font-size: $font-size-base;

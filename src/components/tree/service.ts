@@ -112,7 +112,7 @@ class TreeService {
       if (currentNode.parentKey) {
         const parentNode = flatList.find(
           (i) => i.nodeKey === currentNode.parentKey
-        );
+        )!;
         const parentChecked = (
           parentNode.children as RequiredTreeNodeOptions[]
         ).every((child) =>
@@ -134,19 +134,19 @@ class TreeService {
     };
     update(node);
   };
-  resetDefaultSelectedKey(key: NodeKey = "") {
+  resetDefaultSelectedKey(key: nodeKey = "") {
     this.defaultSelectedKey = key;
   }
 
-  resetDefaultDisabledKeys(keys: NodeKey[]) {
+  resetDefaultDisabledKeys(keys: nodeKey[]) {
     this.defaultDisabledKeys = keys;
   }
 
-  resetDefaultCheckedKeys(keys: NodeKey[]) {
+  resetDefaultCheckedKeys(keys: nodeKey[]) {
     this.defaultCheckedKeys = keys;
   }
 
-  resetDefaultExpandedKeys(keys: NodeKey[]) {
+  resetDefaultExpandedKeys(keys: nodeKey[]) {
     this.defaultExpandedKeys = keys;
   }
   removeDefaultCheckedKeys(node: RequiredTreeNodeOptions) {
@@ -157,7 +157,7 @@ class TreeService {
       this.defaultCheckedKeys.splice(inDefaultIndex, 1);
     }
   }
-  removeDefaultExpandedKeys(key: NodeKey) {
+  removeDefaultExpandedKeys(key: nodeKey) {
     const inDefaultIndex = this.defaultExpandedKeys.findIndex(
       (item) => item === key
     );
@@ -167,7 +167,7 @@ class TreeService {
   }
   getCheckedNodes(
     source: TreeNodeOptions[],
-    checkedKeys: NodeKey[],
+    checkedKeys: nodeKey[],
     checkStrictly = false
   ): TreeNodeOptions[] {
     const result: TreeNodeOptions[] = [];
@@ -175,18 +175,26 @@ class TreeService {
     // console.log('checkedSize :>> ', checkedSize);
     let count = 0;
     // console.log('flatSourceTree :>> ', this.flatSourceTree);
-    const recursion = (list: TreeNodeOptions[], parent: TypeWithNull<TreeNodeOptions> = null) => {
+    const recursion = (
+      list: TreeNodeOptions[],
+      parent: TypeWithNull<TreeNodeOptions> = null
+    ) => {
       for (const item of list) {
         let goon = true;
         if (parent) {
-          if (checkedKeys.includes(item.nodeKey)) { // 本身就在checkedKeys里的让它走正常流程
+          if (checkedKeys.includes(item.nodeKey)) {
+            // 本身就在checkedKeys里的让它走正常流程
             count++;
             result.push(item);
           } else {
-            if (!checkStrictly && result.map(rItem => rItem.nodeKey).includes(parent.nodeKey)) {
+            if (
+              !checkStrictly &&
+              result.map((rItem) => rItem.nodeKey).includes(parent.nodeKey)
+            ) {
               result.push(item); // 爹已选中 但自身不在checkedKeys里的让它跟爹走
             } else {
-              if (count >= checkedSize) { // 爹和自己都没选中，如果checkedKeys里的内容找齐了，结束
+              if (count >= checkedSize) {
+                // 爹和自己都没选中，如果checkedKeys里的内容找齐了，结束
                 goon = false;
               }
             }
@@ -202,20 +210,19 @@ class TreeService {
           }
         }
         if (goon) {
-          if ( item.children?.length) {
+          if (item.children?.length) {
             recursion(item.children, item);
           }
         } else {
           break;
         }
       }
-    }
+    };
     if (checkedSize) {
       recursion(source);
     }
     return result;
   }
-}
 }
 
 export { TreeService };

@@ -2,17 +2,34 @@
 import { computed, defineComponent, PropType, Slot } from "vue";
 import {
   CustomEventFuncType,
+  nodeKey,
   RenderFunc,
   RequiredTreeNodeOptions,
 } from "./types";
 import RenderNode from "./render";
 import ACheckBox from "../Checkbox/index";
 export default defineComponent({
-  name: "ATreeNode",
+  name: "VirTreeNode",
   props: {
     node: {
       type: Object as PropType<RequiredTreeNodeOptions>,
       required: true,
+    },
+    selectedNodes: {
+      type: Array as PropType<RequiredTreeNodeOptions[]>,
+      required: true,
+    },
+    checkedNodeKeys: {
+      type: Array as PropType<nodeKey[]>,
+      required: true
+    },
+    expandedKeys: {
+      type: Array as PropType<nodeKey[]>,
+      required: true
+    },
+    disabledKeys: {
+      type: Array as PropType<nodeKey[]>,
+      required: true
     },
     onToggleExpand: {
       type: Function as CustomEventFuncType<RequiredTreeNodeOptions>,
@@ -56,7 +73,8 @@ export default defineComponent({
       let result = false;
       if (!checkStrictly && node.hasChildren) {
         const childChecked = node.children.filter((i) => i.checked);
-        result = childChecked.length > 0 && childChecked.length < node.children.length;
+        result =
+          childChecked.length > 0 && childChecked.length < node.children.length;
       }
 
       return result;
