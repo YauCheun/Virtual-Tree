@@ -23,7 +23,7 @@ export default defineComponent({
   emits: ["update:modelValue", "change"],
   setup(props, { emit, slots }) {
     const rootCls = computed(() => {
-      let result = "ant-checkbox";
+      let result = "vir-checkbox";
       if (props.modelValue) {
         result += " checked";
       } else if (props.halfChecked) {

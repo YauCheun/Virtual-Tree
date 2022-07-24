@@ -6,6 +6,8 @@
       :source="list"
       :lazyLoad="lazyLoad"
       :render="renderNode"
+      :size="27"
+      :remain="8"
       show-checkbox
     >
       <template #icon="loading">

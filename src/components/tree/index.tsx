@@ -163,6 +163,7 @@ export default defineComponent({
         props.checkStrictly,
         node
       );
+      console.log('expand', node.children)
       const targetIndex = flatList.value.findIndex(
         (item) => item.nodeKey === node.nodeKey
       );
@@ -206,6 +207,7 @@ export default defineComponent({
             loading.value = true;
             node.loading = true;
             props.lazyLoad(node, (children) => {
+              console.log('lazy',children)
               ExpandNode(node, children);
               loading.value = false;
               node.loading = false;

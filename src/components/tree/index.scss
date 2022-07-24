@@ -1,69 +1,81 @@
 @import "./iconfont.css";
 
-.#{$vir-pre}tree-wrap {
+
+.#{$vir-pre}tree {
   position: relative;
   display: inline-block;
   width: 100%;
   user-select: none;
-  .#{$vir-pre}tree {
-    .#{$vir-pre}tree-node {
-      padding: 4px 0;
-      line-height: normal;
-      font-size: $font-size-base;
+
+  .#{$vir-pre}tree-node {
+    padding: 4px 0;
+    line-height: normal;
+    font-size: $font-size-base;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $bg-prev-color;
+    }
+
+    .node-arrow {
+      display: inline-block;
+      //margin-right: 4px;
       cursor: pointer;
-      &:hover {
-        background-color: $bg-prev-color;
+      min-width: 16px;
+
+      .iconfont {
+        display: block;
       }
-      .node-arrow {
-        display: inline-block;
-        //margin-right: 4px;
-        cursor: pointer;
-        min-width: 16px;
+
+      &.expanded {
         .iconfont {
-          display: block;
-        }
-        &.expanded {
-          .iconfont {
-            transform: rotate(90deg);
-          }
-        }
-        .ico-loading {
-          animation: roundLoading 1s linear infinite;
+          transform: rotate(90deg);
         }
       }
-      .node-content {
-        display: inline-block;
-        vertical-align: top;
-        .node-title {
-          padding: 0 6px;
-          vertical-align: top;
-          color: #515a6e;
-          white-space: nowrap;
-          transition: background-color 0.2s;
-          &:hover {
-            color: $primary-color;
-          }
-          &.selected {
-            background-color: $assist-color;
-          }
-          &.disabled {
-            cursor: not-allowed;
-            color: $disable-color;
-          }
-        }
+
+      .ico-loading {
+        animation: roundLoading 1s linear infinite;
       }
     }
-    .node-selected .node-title {
-      background-color: #d5e8fc;
+
+    .node-content {
+      display: inline-block;
+      vertical-align: top;
+
+      .node-title {
+        padding: 0 6px;
+        vertical-align: top;
+        color: #515a6e;
+        white-space: nowrap;
+        transition: background-color 0.2s;
+
+        &:hover {
+          color: $primary-color;
+        }
+
+        &.selected {
+          background-color: $assist-color;
+        }
+
+        &.disabled {
+          cursor: not-allowed;
+          color: $disable-color;
+        }
+      }
     }
   }
 
-  @keyframes roundLoading {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+  .node-selected .node-title {
+    background-color: #d5e8fc;
+  }
+}
+
+@keyframes roundLoading {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }

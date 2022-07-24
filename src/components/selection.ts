@@ -3,12 +3,13 @@ export class SelectionModel<T> {
   private _selections = new Set<T>();
 
   /** 缓存选定项的数组值。 */
-  private _selected: T[] | null = [];
+  private _selected: T[] | null = null;
   get selected(): T[] {
-    if (!this._selected) {
-      this._selected = Array.from(this._selections.values());
-    }
-    return this._selected;
+    // if (!this._selected) {
+    const _selected = Array.from(this._selections.values());
+    // }
+    console.log(_selected);
+    return _selected;
   }
   constructor(private _multiple = false, initiallySelectedValues?: T[]) {
     if (initiallySelectedValues && initiallySelectedValues.length) {
@@ -47,6 +48,7 @@ export class SelectionModel<T> {
    * 切换选择和取消选择之间的值。
    */
   toggle(value: T): void {
+    console.log("tFoggle", value);
     this.isSelected(value) ? this.deselect(value) : this.select(value);
   }
   /**   验证值分配,如果指定的值数组被抛出错误包括多个值,而选择模型不支持多个值 */
@@ -76,6 +78,7 @@ export class SelectionModel<T> {
         this._unMarkAll();
       }
       this._selections.add(value);
+      console.log(this._selections);
     }
   }
 }
