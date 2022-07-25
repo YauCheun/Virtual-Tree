@@ -86,7 +86,7 @@ export default defineComponent({
     const filterNodes = () => {
       if (props.list.length) {
         const nodes = [];
-        for (let a = base.start; a <= base.end; a++) {
+        for (let a = base.start; a < base.end; a++) {
           nodes.push(props.list[a]);
         }
         return nodes;
@@ -102,6 +102,7 @@ export default defineComponent({
         });
       } else {
         visibleList.value = filterNodes();
+        console.log(visibleList.value);
       }
     };
     // 重新计算页面style

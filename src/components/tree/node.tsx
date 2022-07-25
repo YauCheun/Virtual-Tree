@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { computed, defineComponent, PropType, Slot } from "vue";
+import { computed, defineComponent, onMounted, PropType, Slot, watch } from "vue";
 import {
   CustomEventFuncType,
   nodeKey,
@@ -21,15 +21,15 @@ export default defineComponent({
     },
     checkedNodeKeys: {
       type: Array as PropType<nodeKey[]>,
-      required: true
+      required: true,
     },
     expandedKeys: {
       type: Array as PropType<nodeKey[]>,
-      required: true
+      required: true,
     },
     disabledKeys: {
       type: Array as PropType<nodeKey[]>,
-      required: true
+      required: true,
     },
     onToggleExpand: {
       type: Function as CustomEventFuncType<RequiredTreeNodeOptions>,
@@ -58,22 +58,27 @@ export default defineComponent({
   emits: ["toggle-expand", "select-change", "check-change"],
   setup(props, ctx) {
     // eslint-disable-next-line vue/no-setup-props-destructure
-    const getCheckedChildrenSize =(): number => {
+    const getCheckedChildrenSize = (): number => {
       let result = 0;
       if (!props.checkStrictly && props.node.hasChildren) {
         const { children } = props.node;
-        const checkedChildren = (children as RequiredTreeNodeOptions[])!.filter(item => props.checkedNodeKeys.includes(item.nodeKey));
+        const checkedChildren = (children as RequiredTreeNodeOptions[])!.filter(
+          (item) => props.checkedNodeKeys.includes(item.nodeKey)
+        );
         result = checkedChildren.length;
       }
       return result;
-    }
+    };
 
     const textCls = computed(() => {
       let result = "node-title";
       if (props.disabledKeys.includes(props.node.nodeKey)) {
         result += " disabled";
       }
-      if (props.selectedNodes[0].nodeKey ===  props.node.nodeKey && !props.showCheckbox) {
+      if (
+        props.selectedNodes[0].nodeKey === props.node.nodeKey &&
+        !props.showCheckbox
+      ) {
         result += " selected";
       }
       return result;
@@ -81,7 +86,9 @@ export default defineComponent({
     const halfChecked = computed(() => {
       let result = false;
       const checkedChildrenSize = getCheckedChildrenSize();
-      result = checkedChildrenSize > 0 && checkedChildrenSize < props.node.children!.length;
+      result =
+        checkedChildrenSize > 0 &&
+        checkedChildrenSize < props.node.children!.length;
       return result;
     });
     const handleExpand = () => {
@@ -96,9 +103,38 @@ export default defineComponent({
     const handleCheckChange = (checked: boolean) => {
       ctx.emit("check-change", [checked, props.node]);
     };
+    const setCheckedStatus = () => {
+      const checkedChildrenSize = getCheckedChildrenSize();
+      const shouldChecked =
+        checkedChildrenSize > 0 &&
+        checkedChildrenSize === props.node.children!.length;
+      if (
+        shouldChecked &&
+        !props.checkedNodeKeys.includes(props.node.nodeKey)
+      ) {
+        console.log(shouldChecked)
+        handleCheckChange(shouldChecked);
+      }
+    };
+    watch(() => props.node, () => {
+      setCheckedStatus();
+    });
+
+    watch(() => props.checkedNodeKeys, newVal => {
+      setCheckedStatus();
+    });
+    onMounted(() => {
+      console.log(11)
+      setCheckedStatus();
+    });
     const RenderArrow = (): JSX.Element => {
       return (
-        <div class={["node-arrow", props.expandedKeys.includes(props.node.nodeKey) ? "expanded" : ""]}>
+        <div
+          class={[
+            "node-arrow",
+            props.expandedKeys.includes(props.node.nodeKey) ? "expanded" : "",
+          ]}
+        >
           {props.node.hasChildren ? (
             props.iconSlot ? (
               props.iconSlot(props.node.loading)

@@ -4,8 +4,8 @@
     <a-tree
       ref="aTree"
       :source="list"
-      :lazyLoad="lazyLoad"
       :render="renderNode"
+      :defaultCheckedKeys="['0-0-0', '0-0-1', '0-0-2']"
       :size="27"
       :remain="8"
       show-checkbox
@@ -25,16 +25,20 @@ import {
   TreeInstance,
   TreeNodeOptions,
 } from "./types";
-function recursion(path = "0"): TreeNodeOptions[] {
+function recursion(path = "0", level = 3, h = 3): TreeNodeOptions[] {
   const list = [];
-  for (let i = 0; i < 2; i += 1) {
+  for (let i = 0; i < h; i += 1) {
     const nodeKey = `${path}-${i}`;
     const treeNode: TreeNodeOptions = {
       nodeKey,
       name: nodeKey,
-      // children: [],
-      hasChildren: true,
+      children: [],
+      hasChildren: level > 0,
+      // expanded: true,
     };
+    if (level > 0) {
+      treeNode.children = recursion(nodeKey, level - 1);
+    }
     list.push(treeNode);
   }
   return list;

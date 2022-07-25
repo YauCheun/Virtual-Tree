@@ -65,6 +65,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    nodeKey: {
+      type: String,
+      default: 'nodeKey',
+    }
   },
   emits: ["selectChange", "checkChange", "toggleExpand"],
   setup(props, ctx) {
@@ -82,7 +86,7 @@ export default defineComponent({
           props.defaultDisabledKeys,
           props.checkStrictly
         );
-        console.log(flatList.value, newVal);
+        // console.log(flatList.value, newVal);
       },
       { immediate: true }
     );
@@ -186,12 +190,12 @@ export default defineComponent({
           });
         }
       };
+      recursion(node);
       if (delKeys.length) {
         flatList.value = flatList.value.filter(
           (i) => !delKeys.includes(i.nodeKey)
         );
       }
-      recursion(node);
     };
     const handleToggleExpand = (node: RequiredTreeNodeOptions) => {
       if (loading.value) return;
@@ -296,6 +300,7 @@ export default defineComponent({
                 index: number;
               }) => (
                 <VirTreeNode
+                  key={data.item.nodeKey}
                   ref={setRef.bind(null, data.index)}
                   node={data.item}
                   selectedNodes={service.selectedNodes.value.selected}
@@ -312,6 +317,7 @@ export default defineComponent({
                 />
               ),
             }}
+            dataKey={props.nodeKey}
             size={props.size}
             remain={props.remain}
             list={flatList.value}

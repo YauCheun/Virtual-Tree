@@ -8,7 +8,7 @@ export class SelectionModel<T> {
     // if (!this._selected) {
     const _selected = Array.from(this._selections.values());
     // }
-    console.log(_selected);
+    // console.log(_selected);
     return _selected;
   }
   constructor(private _multiple = false, initiallySelectedValues?: T[]) {
@@ -78,7 +78,7 @@ export class SelectionModel<T> {
         this._unMarkAll();
       }
       this._selections.add(value);
-      console.log(this._selections);
+      // console.log(this._selections);
     }
   }
 }
