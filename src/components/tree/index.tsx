@@ -310,6 +310,7 @@ export default defineComponent({
                   iconSlot={ctx.slots.icon}
                   showCheckbox={props.showCheckbox}
                   render={props.render}
+                  costomSlot={ctx.slots.node}
                   checkStrictly={props.checkStrictly}
                   onToggleExpand={handleToggleExpand}
                   onSelectChange={handleSelectChange}

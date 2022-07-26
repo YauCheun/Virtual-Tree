@@ -14,6 +14,11 @@
         <i v-if="loading" class="iconfont iconcustom-icon ico-loading"></i>
         <i v-else class="iconfont iconzhankai"></i>
       </template>
+      <template #node="node">
+        <div style="color: red">
+          {{ node.name }}12312222222222222222222222222222222222
+        </div>
+      </template>
     </a-tree>
   </div>
 </template>

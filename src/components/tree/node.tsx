@@ -1,5 +1,13 @@
 /* eslint-disable prettier/prettier */
-import { computed, defineComponent, onMounted, PropType, Slot, watch } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  PropType,
+  Slot,
+  Slots,
+  watch,
+} from "vue";
 import {
   CustomEventFuncType,
   nodeKey,
@@ -53,6 +61,9 @@ export default defineComponent({
     checkStrictly: {
       type: Boolean,
       default: false,
+    },
+    costomSlot: {
+      type: Function as PropType<Slot>,
     },
   },
   emits: ["toggle-expand", "select-change", "check-change"],
@@ -112,19 +123,25 @@ export default defineComponent({
         shouldChecked &&
         !props.checkedNodeKeys.includes(props.node.nodeKey)
       ) {
-        console.log(shouldChecked)
+        console.log(shouldChecked);
         handleCheckChange(shouldChecked);
       }
     };
-    watch(() => props.node, () => {
-      setCheckedStatus();
-    });
+    watch(
+      () => props.node,
+      () => {
+        setCheckedStatus();
+      }
+    );
 
-    watch(() => props.checkedNodeKeys, newVal => {
-      setCheckedStatus();
-    });
+    watch(
+      () => props.checkedNodeKeys,
+      (newVal) => {
+        setCheckedStatus();
+      }
+    );
     onMounted(() => {
-      console.log(11)
+      console.log(11);
       setCheckedStatus();
     });
     const RenderArrow = (): JSX.Element => {
@@ -148,7 +165,9 @@ export default defineComponent({
       );
     };
     const normalContent = (): JSX.Element => {
-      return props.render ? (
+      return props.costomSlot ? (
+        <div class="costom-node">{props.costomSlot(props.node)}</div>
+      ) : props.render ? (
         <RenderNode render={props.render} node={props.node} />
       ) : (
         <div class={textCls.value}>{props.node.name}</div>
