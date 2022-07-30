@@ -25,6 +25,7 @@
 
 <script lang="tsx">
 import { defineComponent, onMounted, ref } from "vue";
+import ATree from "./index";
 import {
   RequiredTreeNodeOptions,
   TreeInstance,
@@ -50,6 +51,7 @@ function recursion(path = "0", level = 3, h = 3): TreeNodeOptions[] {
 }
 export default defineComponent({
   name: "TreeDemo",
+  components: { ATree },
   setup(props) {
     // https://lychub.github.io/vue-virtual-tree
     const list = ref<TreeNodeOptions[]>([]);

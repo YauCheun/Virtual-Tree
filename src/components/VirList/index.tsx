@@ -8,7 +8,7 @@ import {
   HtmlHTMLAttributes,
 } from "vue";
 import { ZoneInfo } from "./types";
-
+import "../../assets/styles/index.scss";
 export default defineComponent({
   name: "VirList",
   props: {

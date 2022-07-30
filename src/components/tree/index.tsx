@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { defineComponent, PropType, ref, watch } from "vue";
-import { cloneDeep, uniq } from "lodash";
+import { cloneDeep, uniq } from "lodash-es";
 
 import {
   nodeKey,
@@ -12,7 +12,9 @@ import {
   TypeWithUndefined,
 } from "./types";
 import "./index.scss";
+import "../../assets/styles/index.scss";
 import VirTreeNode from "./node";
+import VirList from "../VirList/index";
 import { TreeService } from "./service";
 
 export default defineComponent({
@@ -67,8 +69,8 @@ export default defineComponent({
     },
     nodeKey: {
       type: String,
-      default: 'nodeKey',
-    }
+      default: "nodeKey",
+    },
   },
   emits: ["selectChange", "checkChange", "toggleExpand"],
   setup(props, ctx) {
@@ -156,7 +158,9 @@ export default defineComponent({
         !props.checkStrictly &&
         service.checkedNodeKeys.value.isSelected(node.nodeKey)
       ) {
-        allCheckedKeys.push(...trueChildren.map((item) => item.nodeKey));
+        allCheckedKeys.push(
+          ...trueChildren.map((item: TreeNodeOptions) => item.nodeKey)
+        );
       }
       node.children = service.flattenTree(
         trueChildren,
@@ -167,7 +171,7 @@ export default defineComponent({
         props.checkStrictly,
         node
       );
-      console.log('expand', node.children)
+      console.log("expand", node.children);
       const targetIndex = flatList.value.findIndex(
         (item) => item.nodeKey === node.nodeKey
       );
@@ -211,7 +215,7 @@ export default defineComponent({
             loading.value = true;
             node.loading = true;
             props.lazyLoad(node, (children) => {
-              console.log('lazy',children)
+              console.log("lazy", children);
               ExpandNode(node, children);
               loading.value = false;
               node.loading = false;
@@ -293,7 +297,7 @@ export default defineComponent({
     return () => {
       return (
         <div class="vir-tree">
-          <vir-list
+          <VirList
             v-slots={{
               default: (data: {
                 item: RequiredTreeNodeOptions;
@@ -322,7 +326,7 @@ export default defineComponent({
             size={props.size}
             remain={props.remain}
             list={flatList.value}
-          ></vir-list>
+          ></VirList>
         </div>
       );
     };

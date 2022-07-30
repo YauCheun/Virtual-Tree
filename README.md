@@ -1,6 +1,6 @@
-# vue-next-libs
-### vue-next-libs
-#### 基于Vue3+TypeScript实现的虚拟数组间，提供了渲染大量数据方案
+# vue-virtree
+### vue-virtree
+#### 基于Vue3+TypeScript实现的虚拟树组件，提供了渲染大量数据方案
 ## Project setup
 ```
 npm install

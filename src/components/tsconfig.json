@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "../../lib"
+  },
+  "include": ["."],
+  "exclude": [
+    "node_modules"
+  ]
+}

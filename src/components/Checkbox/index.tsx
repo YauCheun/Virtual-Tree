@@ -1,6 +1,7 @@
 import { defineComponent, computed } from "vue";
 import { CustomEventFuncType } from "../tree/types";
 import "./index.scss";
+import "../../assets/styles/index.scss";
 
 export default defineComponent({
   name: "ACheckbox",

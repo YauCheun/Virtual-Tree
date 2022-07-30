@@ -1,20 +1,32 @@
 {
-  "name": "vue-next-libs",
-  "version": "0.1.0",
-  "private": true,
+  "name": "vue-virtree",
+  "version": "1.0.8",
+  "description": "基于Vue3+TypeScript实现的虚拟树组件，提供了渲染大量数据方案",
+  "main": "./lib/vue-virtree.common.js",
+  "typings": "lib/typings/index.d.ts",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:lib": "vue-cli-service build --dest lib --target lib ./src/components/index.ts && npm run build:types",
+    "build:types": "tsc --project src/components/tsconfig.json",
+    "build:type": "tsc --project src/components/tsconfig.json",
+    "build:umd": "rollup --format umd -c build/rollup.config.js",
+    "build:esm": "rollup --format esm -c build/rollup.config.js",
+    "package": "npm run build:umd & npm run build:type",
     "lint": "vue-cli-service lint"
   },
+  "files": ["lib"],
   "dependencies": {
-    "async-validator": "^4.0.7",
     "core-js": "^3.8.3",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21"
+  },
+  "peerDependencies": {
     "vue": "^3.2.13"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.182",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@types/lodash-es": "^4.17.6",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",
@@ -27,10 +39,20 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^8.0.3",
     "prettier": "^2.4.1",
+    "rollup": "^2.77.2",
+    "rollup-plugin-css-only": "^3.1.0",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-scss": "^3.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.32.1",
+    "rollup-plugin-vue": "^6.0.0",
     "sass": "^1.32.7",
     "sass-loader": "^12.0.0",
     "style-resources-loader": "^1.4.1",
     "typescript": "~4.5.5",
     "vue-cli-plugin-style-resources-loader": "~0.1.5"
-  }
+  },
+  "keywords": ["vue","vue3","typescript","tree"],
+  "author": "https://github.com/YauCheun",
+  "license": "MIT"
 }
