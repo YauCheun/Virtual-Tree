@@ -1,7 +1,6 @@
 import { App } from "vue";
-import tree from "./components/tree";
-// import VirList from "./components/VirList";
-const components = [tree];
+import { VirList, VirTree } from "./components";
+const components = [VirList, VirTree];
 
 export default function (app: App) {
   components.forEach((item) => app.component(item.name, item));
