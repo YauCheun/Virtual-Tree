@@ -9,11 +9,20 @@
         >github</a
       >
     </el-header>
+    <el-affix :offset="120">
+      <el-link type="primary" href="#usage" title="安装使用">安装使用</el-link
+      ><br />
+      <el-link type="primary" href="#usage" title="安装使用">安装使用</el-link
+      ><br />
+      <el-link type="primary" href="#usage" title="安装使用">安装使用</el-link
+      ><br />
+      <el-link type="primary" href="#usage" title="安装使用">安装使用</el-link
+      ><br />
+      <el-link type="primary" href="#usage" title="安装使用">安装使用</el-link>
+    </el-affix>
     <el-main class="content">
       <doc-container />
-      <el-affix :offset="120" class="anchor">
-        <el-button type="primary">Offset top 120px</el-button>
-      </el-affix>
+
       <!-- <a href="#usage" title="安装使用" />
         <a href="#base-demo" title="基本用法" />
         <a href="#checkbox-demo" title="可勾选" />
@@ -44,7 +53,7 @@ $top-bottom-height: 64px;
   .header {
     display: flex;
     align-items: center;
-    color: $white-color;
+    color: $primary-color;
     height: $top-bottom-height;
     .title {
       color: inherit;
@@ -55,10 +64,14 @@ $top-bottom-height: 64px;
       font-size: $font-size-mid;
     }
   }
+  .el-affix {
+    height: auto !important;
+  }
   .content {
     position: relative;
+    padding: 40px;
     min-height: calc(100vh - #{$top-bottom-height * 2});
-    // background-color: $white-color;
+    background-color: $white-color;
     // .anchor {
     //   position: absolute;
     //   right: 50px;
