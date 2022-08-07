@@ -18,7 +18,7 @@ import VirList from "../VirList/index";
 import { TreeService } from "./service";
 
 export default defineComponent({
-  name: "ATree",
+  name: "VirTree",
   props: {
     source: {
       type: Array as PropType<TreeNodeOptions[]>,
@@ -171,7 +171,7 @@ export default defineComponent({
         props.checkStrictly,
         node
       );
-      console.log("expand", node.children);
+      // console.log("expand", node.children);
       const targetIndex = flatList.value.findIndex(
         (item) => item.nodeKey === node.nodeKey
       );
@@ -215,7 +215,7 @@ export default defineComponent({
             loading.value = true;
             node.loading = true;
             props.lazyLoad(node, (children) => {
-              console.log("lazy", children);
+              // console.log("lazy", children);
               ExpandNode(node, children);
               loading.value = false;
               node.loading = false;
@@ -233,6 +233,7 @@ export default defineComponent({
       });
     };
     const handleSelectChange = (node: RequiredTreeNodeOptions) => {
+      console.log(node, service.selectedNodes.value);
       const preSelectedNode = service.selectedNodes.value.selected[0];
       let currentNode: TypeWithNull<TreeNodeOptions> = node;
       if (service.selectedNodes.value.isSelected(node)) {
@@ -242,6 +243,7 @@ export default defineComponent({
       } else {
         service.selectedNodes.value.select(node);
       }
+      console.log(service.selectedNodes.value);
       ctx.emit("selectChange", {
         preSelectedNode,
         node: currentNode,

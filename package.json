@@ -1,6 +1,6 @@
 {
   "name": "vue-virtree",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "基于Vue3+TypeScript实现的虚拟树组件，提供了渲染大量数据方案",
   "main": "./lib/vue-virtree.common.js",
   "typings": "lib/typings/index.d.ts",

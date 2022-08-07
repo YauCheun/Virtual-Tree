@@ -1,13 +1,21 @@
 <template>
-  <div class="demo-box">
-    <h3>tree demo</h3>
-    <a-tree :source="list" :lazyLoad="lazyLoad" />
+  <div class="demo">
+    <el-button @click="checkedNodes">获取勾选节点</el-button>
+    <vir-tree
+      ref="virTree"
+      :source="list"
+      show-checkbox
+      :lazyLoad="lazyLoad"
+      :default-checked-keys="defaultCheckedKeys"
+    />
   </div>
 </template>
 
 <script lang="tsx">
 import { defineComponent, onMounted, ref } from "vue";
-import { TreeNodeOptions } from "../types";
+import { TreeInstance, TreeNodeOptions } from "../components";
+import { getCheckNodes } from "./uses";
+
 function recursion(path = "0"): TreeNodeOptions[] {
   const list = [];
   for (let i = 0; i < 2; i += 1) {
@@ -15,17 +23,20 @@ function recursion(path = "0"): TreeNodeOptions[] {
     const treeNode: TreeNodeOptions = {
       nodeKey,
       name: nodeKey,
-      // children: [],
+      children: [],
       hasChildren: true,
     };
     list.push(treeNode);
   }
   return list;
 }
+
 export default defineComponent({
-  name: "TreeDemo",
-  setup(props) {
+  name: "AsyncDataDemo",
+  setup(prop, { emit }) {
     const list = ref<TreeNodeOptions[]>([]);
+    const virTree = ref<TreeInstance | null>(null);
+    const defaultCheckedKeys = ref([]);
     onMounted(() => {
       list.value = recursion();
     });
@@ -33,6 +44,7 @@ export default defineComponent({
       node: TreeNodeOptions,
       callback: (children: TreeNodeOptions[]) => void
     ) => {
+      console.log("lazyLoad", node);
       const result: TreeNodeOptions[] = [];
       for (let i = 0; i < 2; i += 1) {
         const nodeKey = `${node.nodeKey}-${i}`;
@@ -46,11 +58,17 @@ export default defineComponent({
       }
       setTimeout(() => {
         callback(result);
-      }, 1000);
+      }, 500);
+    };
+    const checkedNodes = () => {
+      getCheckNodes(virTree.value!);
     };
     return {
       list,
+      virTree,
       lazyLoad,
+      defaultCheckedKeys,
+      checkedNodes,
     };
   },
 });

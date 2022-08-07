@@ -53,7 +53,6 @@ export default defineComponent({
   name: "TreeDemo",
   components: { ATree },
   setup(props) {
-    // https://lychub.github.io/vue-virtual-tree
     const list = ref<TreeNodeOptions[]>([]);
     const aTree = ref<TreeInstance>();
     onMounted(() => {

@@ -9,19 +9,38 @@
         >github</a
       >
     </el-header>
-    <el-affix :offset="120">
-      <el-link type="primary" href="#usage" title="安装使用">安装使用</el-link
-      ><br />
-      <el-link type="primary" href="#usage" title="安装使用">安装使用</el-link
-      ><br />
-      <el-link type="primary" href="#usage" title="安装使用">安装使用</el-link
-      ><br />
-      <el-link type="primary" href="#usage" title="安装使用">安装使用</el-link
-      ><br />
-      <el-link type="primary" href="#usage" title="安装使用">安装使用</el-link>
+    <el-affix :offset="120" id="left-affix">
+      <el-link
+        :type="currentIndex !== index ? 'default' : 'primary'"
+        v-for="(item, index) in linkList"
+        :key="item.id"
+        :href="item.id"
+        :title="item.title"
+        >{{ item.title }}</el-link
+      >
+      <!-- <el-link type="default" href="#base-demo" title="基本用法"
+        >基本用法</el-link
+      >
+      <el-link type="primary" href="#checkbox-demo" title="可勾选"
+        >可勾选</el-link
+      >
+      <el-link type="primary" href="#async-dada-demo" title="异步加载"
+        >异步加载</el-link
+      >
+      <el-link type="primary" href="#custom-node-demo" title="自定义渲染节点"
+        >自定义渲染节点</el-link
+      >
+
+      <el-link type="primary" href="#custom-icon-demo" title="自定义图标"
+        >自定义图标</el-link
+      >
+      <el-link type="primary" href="#api" title="API">API</el-link>
+      <el-link type="primary" href="#vir-list" title="虚拟列表prop"
+        >虚拟列表prop</el-link
+      > -->
     </el-affix>
     <el-main class="content">
-      <doc-container />
+      <doc-container @update-index="updateIndex" />
 
       <!-- <a href="#usage" title="安装使用" />
         <a href="#base-demo" title="基本用法" />
@@ -36,18 +55,67 @@
   </el-container>
 </template>
 <script lang="tsx">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onBeforeUnmount, onMounted, ref } from "vue";
 import DocContainer from "./doc/index.vue";
 export default defineComponent({
   components: { DocContainer },
   setup() {
+    let currentIndex = ref(0);
+    const linkList = [
+      {
+        title: "安装使用",
+        id: "#usage",
+      },
+      {
+        title: "基本用法",
+        id: "#base-demo",
+      },
+      {
+        title: "异步加载",
+        id: "#async-dada-demo",
+      },
+      {
+        title: "自定义图标",
+        id: "#custom-icon-demo",
+      },
+      {
+        title: "可勾选",
+        id: "#checkbox-demo",
+      },
+
+      {
+        title: "自定义渲染节点",
+        id: "#custom-node-demo",
+      },
+
+      {
+        title: "API",
+        id: "#api",
+      },
+      {
+        title: "虚拟列表prop",
+        id: "#vir-list",
+      },
+    ];
+    const updateIndex = (index: number) => {
+      console.log(index);
+      currentIndex.value = index;
+    };
     return {
       selectedKeys: ref<string[]>(["2"]),
+      linkList,
+      currentIndex,
+      updateIndex,
     };
   },
 });
 </script>
 <style lang="scss" scoped>
+::v-deep.el-link {
+  display: block;
+  max-width: 100px;
+  text-align: center;
+}
 $top-bottom-height: 64px;
 .app-layout {
   .header {
@@ -70,6 +138,7 @@ $top-bottom-height: 64px;
   .content {
     position: relative;
     padding: 40px;
+    padding-top: 0;
     min-height: calc(100vh - #{$top-bottom-height * 2});
     background-color: $white-color;
     // .anchor {

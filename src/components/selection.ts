@@ -65,7 +65,7 @@ export class SelectionModel<T> {
   }
   /** 清除所有选择 */
   private _unMarkAll() {
-    if (!this.isEmpty) {
+    if (!this.isEmpty()) {
       this._selections.forEach((value) => this._unmarkSelected(value));
     }
   }

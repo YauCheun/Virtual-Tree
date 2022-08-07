@@ -15,10 +15,6 @@ const columns = [
     title: "默认值",
     dataIndex: "defaultValue",
   },
-  {
-    title: "版本号",
-    dataIndex: "version",
-  },
 ];
 const methodColumns = [
   {
@@ -33,9 +29,31 @@ const methodColumns = [
     title: "参数",
     dataIndex: "type",
   },
+];
+const slotColumns = [
   {
-    title: "版本号",
-    dataIndex: "version",
+    title: "插槽名",
+    dataIndex: "argument",
+  },
+  {
+    title: "说明",
+    dataIndex: "description",
+  },
+  {
+    title: "参数",
+    dataIndex: "type",
+  },
+];
+const slotData = [
+  {
+    argument: "icon",
+    description: "返回一个loading,用来标识是否是加载状态",
+    type: "loading:true or false",
+  },
+  {
+    argument: "node",
+    description: "返回当前node节点数据",
+    type: "详见TreeNodeOptions",
   },
 ];
 
@@ -179,34 +197,6 @@ const nodeOptionData = [
     defaultValue: "false",
   },
   {
-    argument: "disabled",
-    description: "是否禁用",
-    type: "boolean",
-    defaultValue: "false",
-    version: "4.0.0已废弃",
-  },
-  {
-    argument: "expanded",
-    description: "是否展开",
-    type: "boolean",
-    defaultValue: "false",
-    version: "4.0.0已废弃",
-  },
-  {
-    argument: "selected",
-    description: "是否选中",
-    type: "boolean",
-    defaultValue: "false",
-    version: "4.0.0已废弃",
-  },
-  {
-    argument: "checked",
-    description: "是否勾选",
-    type: "boolean",
-    defaultValue: "false",
-    version: "4.0.0已废弃",
-  },
-  {
     argument: "children",
     description: "子集",
     type: "TreeNodeOptions[]",
@@ -219,6 +209,69 @@ const nodeOptionData = [
     defaultValue: "null",
   },
 ];
+const listColumns = [
+  {
+    title: "参数",
+    dataIndex: "argument",
+  },
+  {
+    title: "说明",
+    dataIndex: "description",
+  },
+  {
+    title: "类型",
+    dataIndex: "type",
+  },
+  {
+    title: "默认值",
+    dataIndex: "defaultValue",
+  },
+];
+const listOptionData = [
+  {
+    argument: "list",
+    description: "必传，节点的源数据",
+    type: "array",
+    defaultValue: "[]",
+  },
+  {
+    argument: "size",
+    description: "必传，用于虚拟计算，每个节点的高度",
+    type: "number",
+    defaultValue: 27,
+  },
+  {
+    argument: "remain",
+    description: "必传，用于虚拟计算，可视区内显示多少个节点",
+    type: "number",
+    defaultValue: 8,
+  },
+  {
+    argument: "start",
+    description: "可选，从第几个节点开始显示",
+    type: "number",
+    defaultValue: 0,
+  },
+  {
+    argument: "offset",
+    description:
+      "可选，用于设置滚动条默认scrollTop，start存在会优先考虑start值",
+    type: "number",
+    defaultValue: 0,
+  },
+  {
+    argument: "additional",
+    description: "可选， 额外渲染多少个节点",
+    type: "number",
+    defaultValue: 0,
+  },
+  {
+    argument: "dataKey",
+    description: "可选，节点的唯一标识",
+    type: "string",
+    defaultValue: "id",
+  },
+];
 
 export {
   columns,
@@ -227,4 +280,8 @@ export {
   eventData,
   methodData,
   nodeOptionData,
+  slotData,
+  slotColumns,
+  listColumns,
+  listOptionData,
 };

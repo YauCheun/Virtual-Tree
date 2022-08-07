@@ -19,6 +19,8 @@ interface TreeNodeOptions {
 interface TreeInstance {
   getSelectedNode: () => RequiredTreeNodeOptions | undefined;
   getCheckedNodes: () => RequiredTreeNodeOptions[];
+  getHalfCheckedNodes: () => TreeNodeOptions[];
+  getExpandedKeys: () => nodeKey[];
 }
 
 interface TreeNodeInstance {

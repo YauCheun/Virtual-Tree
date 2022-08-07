@@ -1,13 +1,18 @@
 <template>
-  <div class="demo-box">
-    <h3>tree demo</h3>
-    <a-tree :source="list" :lazyLoad="lazyLoad" />
+  <div class="demo">
+    <vir-tree :source="list" show-checkbox :lazyLoad="lazyLoad">
+      <template #icon="loading">
+        <i v-if="loading" class="iconfont iconcustom-icon ico-loading"></i>
+        <i v-else class="iconfont iconzhankai"></i>
+      </template>
+    </vir-tree>
   </div>
 </template>
 
 <script lang="tsx">
 import { defineComponent, onMounted, ref } from "vue";
-import { TreeNodeOptions } from "../types";
+import { TreeNodeOptions } from "../components";
+
 function recursion(path = "0"): TreeNodeOptions[] {
   const list = [];
   for (let i = 0; i < 2; i += 1) {
@@ -15,16 +20,17 @@ function recursion(path = "0"): TreeNodeOptions[] {
     const treeNode: TreeNodeOptions = {
       nodeKey,
       name: nodeKey,
-      // children: [],
+      children: [],
       hasChildren: true,
     };
     list.push(treeNode);
   }
   return list;
 }
+
 export default defineComponent({
-  name: "TreeDemo",
-  setup(props) {
+  name: "CustomIcon",
+  setup(prop, { emit }) {
     const list = ref<TreeNodeOptions[]>([]);
     onMounted(() => {
       list.value = recursion();
@@ -33,6 +39,7 @@ export default defineComponent({
       node: TreeNodeOptions,
       callback: (children: TreeNodeOptions[]) => void
     ) => {
+      console.log("lazyLoad", node);
       const result: TreeNodeOptions[] = [];
       for (let i = 0; i < 2; i += 1) {
         const nodeKey = `${node.nodeKey}-${i}`;
@@ -46,7 +53,7 @@ export default defineComponent({
       }
       setTimeout(() => {
         callback(result);
-      }, 1000);
+      }, 500);
     };
     return {
       list,

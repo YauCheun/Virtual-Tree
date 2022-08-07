@@ -87,7 +87,7 @@ export default defineComponent({
         result += " disabled";
       }
       if (
-        props.selectedNodes[0].nodeKey === props.node.nodeKey &&
+        props.selectedNodes.length && props.selectedNodes[0].nodeKey === props.node.nodeKey &&
         !props.showCheckbox
       ) {
         result += " selected";
@@ -123,7 +123,7 @@ export default defineComponent({
         shouldChecked &&
         !props.checkedNodeKeys.includes(props.node.nodeKey)
       ) {
-        console.log(shouldChecked);
+        // console.log(shouldChecked);
         handleCheckChange(shouldChecked);
       }
     };
@@ -141,7 +141,7 @@ export default defineComponent({
       }
     );
     onMounted(() => {
-      console.log(11);
+      // console.log(11);
       setCheckedStatus();
     });
     const RenderArrow = (): JSX.Element => {

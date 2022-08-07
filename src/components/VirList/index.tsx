@@ -102,7 +102,7 @@ export default defineComponent({
         });
       } else {
         visibleList.value = filterNodes();
-        console.log(visibleList.value);
+        // console.log(visibleList.value);
       }
     };
     // 重新计算页面style
